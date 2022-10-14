@@ -1,16 +1,21 @@
 extends Line2D
 
+var prevPointPosition = []
+
 func _ready():
-	OS.set_window_per_pixel_transparency_enabled(true)
+	for p in range(points.size()-1):
+		prevPointPosition.append(points[p])
+
+func place():
+	points[points.size()-1] = get_global_mouse_position()
 
 func _process(delta):
-	points[points.size()-1] = get_global_mouse_position() #Vector2(rand_range(250,750),rand_range(250,750))
-	for i in range(100):
-		for n in range(points.size()-2,-1,-1):
-			points[n] = normalizeDist(points[n],points[n+1],5)
-	for i in range(100):
-		for n in range(1,points.size(),1):
-			points[n] = normalizeDist(points[n],points[n-1],5)
+	for n in range(100):
+		place()
+		for p in range(points.size()-2,-1,-1):
+			points[p] = normalizeDist(points[p],points[p+1],5)
+		for p in range(1,points.size(),1):
+			points[p] = normalizeDist(points[p],points[p-1],5)
 
 func normalizeDist(MovingVector,TargetVector,dist):
 	var angle = 0
